@@ -1,4 +1,4 @@
-ame: ThinQ-Test
+name: ThinQ-Test
 
 on:
   push:
