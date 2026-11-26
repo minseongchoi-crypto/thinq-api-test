@@ -1,0 +1,29 @@
+name: ❄️ LG ThinQ 가전 제어 무인 자동 테스트 파이프라인
+
+on:
+  push:
+    branches: [ "main" ]  # main 브랜치에 파일이 올라갈 때마다 자동으로 작동!
+
+jobs:
+  run-newman:
+    runs-on: ubuntu-latest  # 깃허브가 제공하는 공짜 리눅스 컴퓨터 빌려 쓰기!
+
+    steps:
+    - name: 1️⃣ 깃허브에 올린 파일 복사해오기
+      uses: actions/checkout@v4
+
+    - name: 2️⃣ Node.js 엔진 설치하기
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: 3️⃣ 뉴맨(Newman) 설치하기 [source: 15]
+      run: npm install -g newman
+
+    - name: 4️⃣ 0.7초 만에 씽큐 제어 무인 테스트 쏘기 🚀 [source: 7, 20]
+      run: |
+        newman run "My Collection.postman_collection.json" \
+          -e LG-ThinQ.postman_environment.json \
+          --env-var "thinq_url=https://api-kic.lgthinq.com" \
+          --env-var "thinq_pat=${{ secrets.THINQ_PAT }}" \
+          --env-var "my_device_id=3c3733939fcfe645b42519a480df51e7afeed78e6c7da3a498ec81d00cc692ae"
