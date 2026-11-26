@@ -38,5 +38,5 @@ jobs:
 
         newman run "$COLLECTION_FILE" \
           --env-var "thinq_url=https://api-kic.lgthinq.com" \
-          --env-var "thinq_pat=${{ secrets.THINQ_PAT }}" \
+          --env-var "thinq_pat=Bearer ${{ secrets.THINQ_PAT }}" \
           --env-var "my_device_id=3c3733939fcfe645b42519a480df51e7afeed78e6c7da3a498ec81d00cc692ae"
