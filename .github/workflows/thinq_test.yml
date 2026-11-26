@@ -22,7 +22,7 @@ jobs:
 
     - name: 4. Execute Test 🚀
       run: |
-        newman run "My_Collection.postman_collection.json" \
+        newman run ".github/workflows/My_Collection.postman_collection.json" \
           --env-var "thinq_url=https://api-kic.lgthinq.com" \
           --env-var "thinq_pat=${{ secrets.THINQ_PAT }}" \
           --env-var "my_device_id=3c3733939fcfe645b42519a480df51e7afeed78e6c7da3a498ec81d00cc692ae"
