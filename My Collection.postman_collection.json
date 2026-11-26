@@ -1,0 +1,206 @@
+{
+  "info": {
+    "_postman_id": "9e68c06a-856b-4a05-8ef9-0bbeb46d122e",
+    "name": "My Collection",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "60219323",
+    "_collection_link": "https://go.postman.co/collection/60219323-9e68c06a-856b-4a05-8ef9-0bbeb46d122e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "가전 목록 조회",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var jsonData = pm.response.json();\r\nvar fridge = jsonData.response.find(d => d.deviceType === \"DEVICE_REFRIGERATOR\");\r\n\r\nif (fridge) {\r\n    pm.collectionVariables.set(\"my_device_id\", fridge.deviceId);\r\n    pm.environment.set(\"my_device_id\", fridge.deviceId);\r\n    pm.globals.set(\"my_device_id\", fridge.deviceId);\r\n}\r\n\r\npm.test(\"가전 목록 정상 수신\", function () {\r\n    pm.response.to.have.status(200);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{thinq_pat}}"
+          },
+          {
+            "key": "x-api-key",
+            "value": "v6GFvkweNo7DK7yD3ylIZ9w52aKBU0eJ7wLXkSR3"
+          },
+          {
+            "key": "x-country",
+            "value": "KR"
+          },
+          {
+            "key": "x-client-id",
+            "value": "gemini-postman-client-id"
+          },
+          {
+            "key": "x-message-id",
+            "value": "{{my_message_id}}"
+          },
+          {
+            "key": "x-service-phase",
+            "value": "OP"
+          }
+        ],
+        "url": {
+          "raw": "{{thinq_url}}/devices",
+          "host": [
+            "{{thinq_url}}"
+          ],
+          "path": [
+            "devices"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "냉장고 현재 상태 조회",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"냉장고 상태 조회 성공\", function () {\r\n    pm.response.to.have.status(200);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{thinq_pat}}"
+          },
+          {
+            "key": "x-api-key",
+            "value": "v6GFvkweNo7DK7yD3ylIZ9w52aKBU0eJ7wLXkSR3"
+          },
+          {
+            "key": "x-country",
+            "value": "KR"
+          },
+          {
+            "key": "x-client-id",
+            "value": "gemini-postman-client-id"
+          },
+          {
+            "key": "x-message-id",
+            "value": "{{my_message_id}}"
+          },
+          {
+            "key": "x-service-phase",
+            "value": "OP"
+          }
+        ],
+        "url": {
+          "raw": "{{thinq_url}}/devices/{{my_device_id}}/state",
+          "host": [
+            "{{thinq_url}}"
+          ],
+          "path": [
+            "devices",
+            "{{my_device_id}}",
+            "state"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "냉장실 온도 3도 제어",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"냉장고 제어 요청 처리\", function () {\r\n    pm.expect([200, 400]).to.include(pm.response.code);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{thinq_pat}}"
+          },
+          {
+            "key": "x-api-key",
+            "value": "v6GFvkweNo7DK7yD3ylIZ9w52aKBU0eJ7wLXkSR3"
+          },
+          {
+            "key": "x-country",
+            "value": "KR"
+          },
+          {
+            "key": "x-client-id",
+            "value": "gemini-postman-client-id"
+          },
+          {
+            "key": "x-message-id",
+            "value": "{{my_message_id}}"
+          },
+          {
+            "key": "x-service-phase",
+            "value": "OP"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"temperature\": {\r\n        \"locationName\": \"FRIDGE\",\r\n        \"targetTemperature\": 3\r\n    }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{thinq_url}}/devices/{{my_device_id}}/control",
+          "host": [
+            "{{thinq_url}}"
+          ],
+          "path": [
+            "devices",
+            "{{my_device_id}}",
+            "control"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "var randomId = Math.random().toString(16).substring(2, 14) + Math.random().toString(16).substring(2, 12);\r",
+          "pm.globals.set(\"my_message_id\", randomId);"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "bearer_token_1dqg",
+      "secret": true
+    }
+  ]
+}
