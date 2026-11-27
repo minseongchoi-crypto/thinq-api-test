@@ -14,7 +14,6 @@ jobs:
 
     - name: 2. Check All Files In Repo
       run: |
-        echo "=== 현재 저장소에 있는 모든 파일 목록 ==="
         find . -maxdepth 3 -not -path '*/.*' -o -name "*.json" -o -name "*.yml"
 
     - name: 3. Install Node
@@ -25,17 +24,20 @@ jobs:
     - name: 4. Install Newman
       run: npm install -g newman
 
-    - name: 5. Auto Detect & Run Newman 🚀
+    - name: 5. Debug ThinQ Response Body 🔍
       run: |
-        # .json으로 끝나는 컬렉션 파일을 자동으로 찾아서 실행!
+        echo "=== 실제 서버가 주는 응답 본문 확인 ==="
+        curl -s -X GET "https://api-kic.lgthinq.com/devices" \
+          -H "Authorization: Bearer ${{ secrets.THINQ_PAT }}" \
+          -H "x-api-key: v6GFvkweNo7DK7yD3ylIZ9w52aKBU0eJ7wLXkSR3" \
+          -H "x-client-id: gemini-postman-client-id" \
+          -H "x-country: KR" \
+          -H "x-service-phase: OP" \
+          -H "x-message-id: 1234567890123456789012"
+
+    - name: 6. Auto Detect & Run Newman 🚀
+      run: |
         COLLECTION_FILE=$(find . -name "*collection.json" | head -n 1)
-        echo "찾아낸 컬렉션 파일: $COLLECTION_FILE"
-
-        if [ -z "$COLLECTION_FILE" ]; then
-          echo "❌ 컬렉션 JSON 파일을 찾을 수 없습니다. 파일이 생성되었는지 확인하세요!"
-          exit 1
-        fi
-
         newman run "$COLLECTION_FILE" \
           --env-var "thinq_url=https://api-kic.lgthinq.com" \
           --env-var "thinq_pat=${{ secrets.THINQ_PAT }}" \
